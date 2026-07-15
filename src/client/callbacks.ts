@@ -5,7 +5,6 @@ import type {
   CircleIdArgs,
   ChatIdArgs,
   DMArgs,
-  DMAllArgs,
   SendMessageArgs,
   MakeOnlineArgs,
   UserIdArgs,
@@ -104,22 +103,7 @@ export const DMCallback = async (
 ): Promise<void> => {
   await process({
     callback: async () => {
-      await kyodo.chat.create({ type: 0, inviteeUids: [userId], initialMessage }); // check later
-    },
-    logs: {
-      success: 'Sent DM successfully',
-      error: 'Failed to send DM',
-    },
-  });
-};
-
-export const DMAllCallback = async (
-  kyodo: KyodoDorks,
-  { initialMessage, inviteeUids }: DMAllArgs
-): Promise<void> => {
-  await process({
-    callback: async () => {
-      await kyodo.chat.create({ type: 0, inviteeUids, initialMessage }); // check later
+      await kyodo.chat.create({ type: 0, inviteeUids: [userId], initialMessage });
     },
     logs: {
       success: 'Sent DM successfully',

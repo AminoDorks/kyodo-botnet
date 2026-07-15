@@ -1,15 +1,13 @@
+import { file } from 'bun';
 import { type Chat, KyodoDorks } from 'kyodo.dorks';
 
 import raw from '../../raw.json';
 import { delay, findCachedCredentials, findProxies } from '../util/helpers';
 import { many, pool } from '../util/tasks';
-import { ACTIONS, BATCHES, CONCURRENCIES, PATHS } from '../constants';
-import type { CachedCredentials, ProxyType } from '../types/helpers';
 import { callbacks } from '../util/pools';
 import {
   createChatCallback,
   createPostCallback,
-  DMAllCallback,
   DMCallback,
   editProfileCallback,
   followCallback,
@@ -20,7 +18,9 @@ import {
   makeOnlineCallback,
   sendMessageCallback,
 } from './callbacks';
-import { file } from 'bun';
+import { ACTIONS, BATCHES, CONCURRENCIES, PATHS } from '../constants';
+import type { CachedCredentials, ProxyType } from '../types/helpers';
+import type { ParsingResult } from '../types/botnet';
 
 export class Botnet {
   private proxies: string[] = [];
@@ -38,7 +38,7 @@ export class Botnet {
     return (await this.instance.linkResolution(prompt('Circle url: ')!)).circleId;
   };
 
-  private parseObject = async (object: string): Promise<{ circleId: string; objectId: string }> => {
+  private parseObject = async (object: string): Promise<ParsingResult> => {
     const { circleId, objectId } = await this.instance.linkResolution(prompt(`${object} url: `)!);
     return { circleId, objectId };
   };
@@ -144,8 +144,8 @@ export class Botnet {
     await pool<string>(
       inviteeUids,
       async (userId) => {
-        await callbacks(circledContexts, DMAllCallback, {
-          inviteeUids: [userId],
+        await callbacks(circledContexts, DMCallback, {
+          userId,
           initialMessage,
           type: 0,
         });

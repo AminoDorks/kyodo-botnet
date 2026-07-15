@@ -24,11 +24,6 @@ export type DMArgs = {
   initialMessage: string;
 };
 
-export type DMAllArgs = {
-  inviteeUids: string[];
-  initialMessage: string;
-};
-
 export type MakeOnlineArgs = {
   status: string;
 };
